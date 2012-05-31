@@ -1,28 +1,17 @@
 package irc;
 
-import irc.events.IrcEvent;
+import irc.adaptors.InputHandlerAdapter;
 
+import java.io.File;
 import java.io.IOException;
+
+import org.python.core.PyObject;
+import org.python.util.PythonInterpreter;
 
 
 public class IrcClient extends IrcProtocol implements Runnable {
 	
 	private Thread thread;
-	
-	public void handleInput(String input) {
-		if (this.getInputEventListener() == null) return;
-		IrcEvent ircEvent = new IrcEvent(new IrcMessage(input));
-		String command = ircEvent.getSource().getCommand();
-		if (command.equalsIgnoreCase("privmsg")) {
-			this.getInputEventListener().handlePrivMsg(ircEvent);
-		} else if (command.equalsIgnoreCase("ping")) {
-			this.getInputEventListener().handlePing(ircEvent);
-		} else if (command.equalsIgnoreCase("invite")) {
-			this.getInputEventListener().handleInvite(ircEvent);
-		} else if (command.equalsIgnoreCase("kick")) {
-			this.getInputEventListener().handleKick(ircEvent);
-		}
-	}
 	
 	@Override
 	public void run() {
@@ -30,7 +19,7 @@ public class IrcClient extends IrcProtocol implements Runnable {
 		try {
 			while ((str = this.getIn().readLine()) != null) {
 				System.out.println(str);
-				handleInput(str);
+				this.invokeListeners(str);
 				Thread.sleep(20);
 			}
 		} catch (IOException e) {
@@ -41,10 +30,34 @@ public class IrcClient extends IrcProtocol implements Runnable {
 			e.printStackTrace();
 		}
 	}
+	
+	private void loadModule(String module) {
+		PythonInterpreter interpreter = new PythonInterpreter();
+		try {
+			interpreter.exec("from scripts." + module + " import " + module);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		PyObject pyObject = interpreter.get(module);
+		PyObject newObj = pyObject.__call__();
+		InputHandlerAdapter listener = (InputHandlerAdapter) newObj.__tojava__(InputHandlerAdapter.class);
+		listener.setIrcClient(this);
+		this.addInputEventListener(listener);
+	}
+	
+	public void loadModules(String path) {
+		File folder = new File(path);
+		String[] files = folder.list();
+		for (String file : files) {
+			if (file.equals("__init__.py")) continue;
+			loadModule(file.substring(0, file.indexOf(".")));
+		}
+	}
 
 	public IrcClient(String host, int ip, String nick, String user, String pass) throws IOException {
 		super(host, ip, nick, user, pass);
-		this.setInputEventListener(new Input(this));
+		loadModules("jython/scripts/");
 		thread = new Thread(this);
 		thread.start();
 	}

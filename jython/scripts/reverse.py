@@ -1,12 +1,13 @@
-from irc.commands import Command
-
+from irc.adaptors import InputHandlerAdapter
 from java.lang import StringBuilder
 
-class reverse(Command):
+class reverse(InputHandlerAdapter):
     
-    def execute(self, client, nick, cmdInput, loc):
-        try:
-            client.privMsg(StringBuilder(cmdInput).reverse().toString(), loc)
-        except BaseException, e:
-            print e
-            client.privMsg(str(e), loc)
+    def handleUserCommand(self, ircEvent):
+        msg = ircEvent.getSource()
+        if (msg.getUserCommand() == "reverse"):
+            try:
+                self.getIrcClient().privMsg(StringBuilder(msg.getUserParam()).reverse().toString(), msg.getParams()[0])
+            except BaseException, e:
+                print e
+                self.getIrcClient().privMsg(str(e), msg.getParams()[0])

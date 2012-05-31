@@ -1,10 +1,27 @@
 package irc.adaptors;
 
+import irc.IrcClient;
 import irc.events.IrcEvent;
 import irc.listeners.InputListener;
 
 
 public abstract class InputHandlerAdapter implements InputListener {
+	
+	private IrcClient ircClient;
+	
+	public void setIrcClient(IrcClient ircClient) {
+		this.ircClient = ircClient;
+	}
+	
+	public IrcClient getIrcClient() {
+		return ircClient;
+	}
+	
+	@Override
+	public void handleUserCommand(IrcEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
 	public void handleJoin(IrcEvent e) {

@@ -5,6 +5,8 @@ import irc.events.IrcEvent;
 
 public interface InputListener extends Listener {
 	
+	public void handleUserCommand(IrcEvent e);
+	
 	public void handleJoin(IrcEvent e);
 	
 	public void handlePart(IrcEvent e);

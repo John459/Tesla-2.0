@@ -60,11 +60,11 @@ public class IrcMessage {
 	}
 	
 	public String getUserCommand() {
-		if (!trailing.startsWith(IDENTIFIER)) return null;
+		if (trailing == null || !trailing.startsWith(IDENTIFIER)) return null;
 		int index = trailing.indexOf(" ");
 		if (index == -1)
 			index = trailing.length();
-		return trailing.substring(1, index);
+		return trailing.substring(1, index).toLowerCase();
 	}
 	
 	public String getUserParam() {
