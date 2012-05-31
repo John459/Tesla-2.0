@@ -16,7 +16,7 @@ class ircinput(InputHandlerAdapter):
     
     def handlePing(self, ircEvent):
         try:
-            self.getIrcClient().write("PONG :" + ircEvent.getSource().getTraiing())
+            self.getIrcClient().write("PONG :" + ircEvent.getSource().getTrailing())
         except BaseException, e:
             print e
             

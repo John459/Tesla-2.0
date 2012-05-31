@@ -16,7 +16,7 @@ public abstract class IrcProtocol {
 	
 	private BufferedReader in;
 	private PrintWriter out;
-	private List<InputListener> inputEventListeners = new  CopyOnWriteArrayList<InputListener>();
+	private List<InputListener> inputEventListeners = new CopyOnWriteArrayList<InputListener>();
 	
 	public void privMsg(String output, String loc) {
 		write("PRIVMSG " + loc + " :" + output);
