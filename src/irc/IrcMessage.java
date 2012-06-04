@@ -64,7 +64,7 @@ public class IrcMessage {
 		int index = trailing.indexOf(" ");
 		if (index == -1)
 			index = trailing.length();
-		return trailing.substring(1, index).toLowerCase();
+		return trailing.substring(1, index).toLowerCase().trim();
 	}
 	
 	public String getUserParam() {
@@ -72,7 +72,7 @@ public class IrcMessage {
 		if (command == null || command.length() +2 >= trailing.length())
 			return null;
 		String param = trailing.substring(command.length()+2);
-		return param;
+		return param.trim();
 	}
 	
 }

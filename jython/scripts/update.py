@@ -1,6 +1,8 @@
 import echo
 import reverse
 import ircinput
+import cmd
+import calc
 
 from irc.adaptors import InputHandlerAdapter
 
@@ -14,11 +16,9 @@ class update(InputHandlerAdapter):
                 reload(echo)
                 reload(reverse)
                 reload(ircinput)
-                '''self.getIrcClient().loadModule("update")
-                self.getIrcClient().loadModule("ircinput")
-                self.getIrcClient().loadModule("echo")
-                self.getIrcClient().loadModule("reverse")'''
-                self.getIrcClient().loadModules("jython/scripts/")
+                reload(cmd)
+                reload(calc)
+                self.getIrcClient().loadModules("jython/scripts/", "scripts")
                 self.getIrcClient().privMsg("Scripts updated.", msg.getParams()[0])
             except BaseException, e:
                 print e

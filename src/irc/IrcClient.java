@@ -31,10 +31,10 @@ public class IrcClient extends IrcProtocol implements Runnable {
 		}
 	}
 	
-	private void loadModule(String module) {
+	private void loadModule(String module, String scriptPackage) {
 		PythonInterpreter interpreter = new PythonInterpreter();
 		try {
-			interpreter.exec("from scripts." + module + " import " + module);
+			interpreter.exec("from " + scriptPackage + "." + module + " import " + module);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return;
@@ -46,18 +46,18 @@ public class IrcClient extends IrcProtocol implements Runnable {
 		this.addInputEventListener(listener);
 	}
 	
-	public void loadModules(String path) {
+	public void loadModules(String path, String scriptPackage) {
 		File folder = new File(path);
 		String[] files = folder.list();
 		for (String file : files) {
 			if (file.equals("__init__.py")) continue;
-			loadModule(file.substring(0, file.indexOf(".")));
+			loadModule(file.substring(0, file.indexOf(".")), scriptPackage);
 		}
 	}
 
 	public IrcClient(String host, int ip, String nick, String user, String pass) throws IOException {
 		super(host, ip, nick, user, pass);
-		loadModules("jython/scripts/");
+		loadModules("jython/scripts/", "scripts");
 		thread = new Thread(this);
 		thread.start();
 	}
