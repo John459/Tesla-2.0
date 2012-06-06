@@ -86,6 +86,10 @@ public abstract class IrcProtocol {
 			for (InputListener i : inputEventListeners) {
 				i.handleNotice(event);
 			}
+		} else if (command.equalsIgnoreCase("nick")) {
+			for (InputListener i : inputEventListeners) {
+				i.handleNick(event);
+			}
 		}
 	}
 	

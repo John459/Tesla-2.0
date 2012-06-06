@@ -88,6 +88,12 @@ public abstract class InputHandlerAdapter implements InputListener {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void handleNick(IrcEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 	

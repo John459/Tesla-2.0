@@ -29,4 +29,6 @@ public interface InputListener extends Listener {
 	
 	public void handlePing(IrcEvent e);
 	
+	public void handleNick(IrcEvent e);
+	
 }
