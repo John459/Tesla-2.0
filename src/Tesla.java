@@ -6,7 +6,7 @@ import irc.IrcClient;
 
 public class Tesla {
 	
-	private static final String NICK = "TeslaV2";
+	private static final String NICK = "Tesla";
 	
 	private static final String USER = "Tesla";
 	
