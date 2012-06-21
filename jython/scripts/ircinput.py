@@ -19,3 +19,4 @@ class ircinput(InputHandlerAdapter):
             self.getIrcClient().write("PONG :" + ircEvent.getSource().getTrailing())
         except BaseException, e:
             print e
+            

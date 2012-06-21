@@ -19,7 +19,11 @@ public class IrcClient extends IrcProtocol implements Runnable {
 		try {
 			while ((str = this.getIn().readLine()) != null) {
 				System.out.println(str);
-				this.invokeListeners(str);
+				try {
+					this.invokeListeners(str);
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+				}
 				Thread.sleep(20);
 			}
 		} catch (IOException e) {

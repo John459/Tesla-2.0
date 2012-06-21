@@ -2,9 +2,8 @@ import subprocess
 
 from irc.adaptors import InputHandlerAdapter
 
-
 class cmd(InputHandlerAdapter):
-    
+        
     def execute(self, command):
         process = subprocess.Popen(["/bin/sh", "-c", command],
                                    stdout=subprocess.PIPE,
@@ -14,7 +13,7 @@ class cmd(InputHandlerAdapter):
     
     def handleUserCommand(self, event):
         msg = event.getSource()
-        if (msg.getUserCommand() == "cmd"):
+        if (msg.getUserCommand() == "cmd" and msg.getNick() == "john"):
             try:
                 print msg.getUserParam()
                 output = self.execute(msg.getUserParam())

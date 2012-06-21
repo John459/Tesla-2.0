@@ -6,6 +6,7 @@ from irc.adaptors import InputHandlerAdapter
 class calc(InputHandlerAdapter):
     
     def handleUserCommand(self, event):
+        return
         msg = event.getSource()
         if (msg.getUserCommand() == "calc"):
             try:
