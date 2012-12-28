@@ -10,7 +10,11 @@ class ircinput(InputHandlerAdapter):
             
     def handleKick(self, ircEvent):
         try:
-            self.getIrcClient().join(ircEvent.getSource().getParams()[0])
+           msg = ircEvent.getSource()
+	   if (msg.getTrailing() == self.getIrcClient().getNick()):
+		   self.getIrcClient().join(msg.getParams()[0])
+	   else:
+		   self.getIrcClient().privMsg(msg.getTrailing() + " was OWNED!", msg.getParams()[0])
         except BaseException, e:
             print e
     
