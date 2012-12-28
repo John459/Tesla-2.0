@@ -12,6 +12,15 @@ import org.python.util.PythonInterpreter;
 public class IrcClient extends IrcProtocol implements Runnable {
 	
 	private Thread thread;
+	private String nick;
+	
+	public IrcClient(String host, int ip, String nick, String user, String pass) throws IOException {
+		super(host, ip, nick, user, pass);
+		this.nick = nick;
+		loadModules("jython/scripts/", "scripts");
+		thread = new Thread(this);
+		thread.start();
+	}
 	
 	@Override
 	public void run() {
@@ -54,16 +63,14 @@ public class IrcClient extends IrcProtocol implements Runnable {
 		File folder = new File(path);
 		String[] files = folder.list();
 		for (String file : files) {
-			if (file.startsWith("_")) continue;
+			if (file.startsWith("_") || new File(path + file).isDirectory()) continue;
 			loadModule(file.substring(0, file.indexOf(".")), scriptPackage);
 		}
 	}
 
-	public IrcClient(String host, int ip, String nick, String user, String pass) throws IOException {
-		super(host, ip, nick, user, pass);
-		loadModules("jython/scripts/", "scripts");
-		thread = new Thread(this);
-		thread.start();
+	public String getNick()
+	{
+		return nick;
 	}
 	
 }
