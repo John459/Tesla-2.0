@@ -54,7 +54,7 @@ public class IrcClient extends IrcProtocol implements Runnable {
 		File folder = new File(path);
 		String[] files = folder.list();
 		for (String file : files) {
-			if (file.equals("__init__.py")) continue;
+			if (file.startsWith("_")) continue;
 			loadModule(file.substring(0, file.indexOf(".")), scriptPackage);
 		}
 	}
