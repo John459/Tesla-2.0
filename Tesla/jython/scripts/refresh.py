@@ -4,8 +4,11 @@ import ircinput
 import cmd
 import calc
 import chat
+import eightball
+from _update import update
 
 from irc.adaptors import InputHandlerAdapter
+from irc import IrcClient
 
 class refresh(InputHandlerAdapter):
     
@@ -20,8 +23,8 @@ class refresh(InputHandlerAdapter):
                 reload(cmd)
                 reload(calc)
                 reload(chat)
-                self.getIrcClient().loadModules("jython/scripts/", "scripts")
-                self.getIrcClient().privMsg("Scripts refreshed.", msg.getParams()[0])
+		reload(eightball)
+		update.doUpdate(update(), self.getIrcClient(), msg.getParams()[0])
             except BaseException, e:
                 print e
                 self.getIrcClient().privMsg(str(e), msg.getParams()[0])
