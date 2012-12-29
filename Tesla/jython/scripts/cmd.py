@@ -12,7 +12,8 @@ class cmd(InputHandlerAdapter):
         return [output[0], output[1]]
     
     def handleUserCommand(self, event):
-        msg = event.getSource()
+        return
+	msg = event.getSource()
         if (msg.getUserCommand() == "cmd" and msg.getNick() == "john"):
             try:
                 print msg.getUserParam()
