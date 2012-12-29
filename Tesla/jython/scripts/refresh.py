@@ -5,6 +5,7 @@ import cmd
 import calc
 import chat
 import eightball
+import hangman
 from _update import update
 
 from irc.adaptors import InputHandlerAdapter
@@ -24,6 +25,7 @@ class refresh(InputHandlerAdapter):
                 reload(calc)
                 reload(chat)
 		reload(eightball)
+		reload(hangman)
 		update.doUpdate(update(), self.getIrcClient(), msg.getParams()[0])
             except BaseException, e:
                 print e
