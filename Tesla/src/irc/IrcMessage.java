@@ -13,6 +13,10 @@ public class IrcMessage {
 	
 	private String trailing;
 	
+	public IrcMessage(String input) {
+		parseInput(input);
+	}
+	
 	private void parseInput(String input) {
 		int prefixEnd = -1, trailingStart;
 		if (input.startsWith(":")) {
@@ -31,10 +35,6 @@ public class IrcMessage {
 			params = new String[cmdAndParams.length-1];
 			System.arraycopy(cmdAndParams, 1, params, 0, params.length);
 		}
-	}
-	
-	public IrcMessage(String input) {
-		parseInput(input);
 	}
 	
 	public String getPrefix() {
@@ -68,13 +68,19 @@ public class IrcMessage {
 		return noIdent.substring(0, index).toLowerCase().trim();
 	}
 	
-	public String getUserParam() {
+	public String[] getUserParams() {
 		String command = getUserCommand();
 		if (command == null || command.length() +2 >= trailing.length())
 			return null;
-		String param = trailing.substring(command.length()+2);
-		System.out.println("Trimmed: " + param.trim());
-		return param.trim();
+		String param = trailing.substring(command.length()+2).trim();
+		if (param.contains(" "))
+		{
+			return param.split(" ");
+		}
+		else
+		{
+			return new String[] {param};
+		}
 	}
 	
 }
