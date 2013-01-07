@@ -5,7 +5,6 @@ import random
 class hangman(InputHandlerAdapter):
 
 	games = dict()
-	word = str()
 	words = list()
 
 	def __init__(self):
@@ -28,26 +27,25 @@ class hangman(InputHandlerAdapter):
 		channel = msg.getParams()[0]
 		if (msg.getUserParams()[0] == "start" and not(channel in self.games)):
 			pos = int(random.random() * len(self.words))
-			self.getIrcClient().privMsg(nick + " has started hangman. Use the command 'hman join' to join. When ready, type the command 'hman begin' to begin the game.", channel)
-			self.word = self.words[pos]
-			self.word = self.word[:len(self.word)-1]
-			self.games[channel] = hman(self.word)
+			self.getIrcClient().privMsg("Hangman has started!. Type the command 'hman [guess]' to start guessing letters.", channel)
+			word = self.words[pos]
+			word = word[:len(word)-1]
+			self.games[channel] = hman(word)
 			self.games[channel].addPlayer(nick)
+			self.getIrcClient().privMsg(self.games[channel].guess, channel)
 			return
 		if (not(channel in self.games)):
 			return
-		if (msg.getUserParams()[0] == "begin"):
-		 	self.games[channel].play = True
-		 	self.getIrcClient().privMsg("The game has started. Use the command 'hman [guess]' to start guessing letters.", channel)
-			self.getIrcClient().privMsg(self.games[channel].guess, channel)
-		elif (msg.getUserParams()[0] == "join"):
+		elif (msg.getUserParams()[0] == "join" and not(self.games[channel].play)):
 		 	if (self.games[channel].addPlayer(nick)):
 				self.getIrcClient().privMsg(nick + " has joined the game.", channel)
 		elif (msg.getUserParams()[0] == "stop"):
-		 	self.getIrcClient().privMsg("The game has been stopped. The word was: " + self.word, channel)
+		 	self.getIrcClient().privMsg("The game has been stopped. The word was: " + self.games[channel].word, channel)
 			self.games[channel].gameover()
 			del self.games[channel]
 		 	return
+		elif (msg.getUserParams()[0] == "word"):
+		  	self.getIrcClient().privMsg(self.games[channel].guess, channel)
 		else:
 		 	guess = msg.getUserParams()[0]
 		 	response = self.games[channel].doGuess(nick, guess)
@@ -57,12 +55,12 @@ class hangman(InputHandlerAdapter):
 				self.getIrcClient().notice(response, nick)
 			else:
 				self.getIrcClient().privMsg(response, channel)
-			if (response == self.word):
+			if (response == self.games[channel].word):
 				self.getIrcClient().privMsg(nick + " wins!", channel)
 				self.games[channel].gameover()
 				del self.games[channel]
 			elif (response == "Game over"):
-			 	self.getIrcClient().privMsg("The word was: " + self.word, channel)
+			 	self.getIrcClient().privMsg("The word was: " + self.games[channel].word, channel)
 			 	self.games[channel].gameover()
 			 	del self.games[channel]
 

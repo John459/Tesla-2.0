@@ -7,15 +7,19 @@ class player():
 
 class hman():
 
-	players = dict()
-	guesses = list()
-	word = ""
-	guess = ""
-	play = False
+	#blacklist = list()
+	#players = dict()
+	#guesses = list()
+	#word = ""
+	#guess = ""
+	#play = False
 
 	def __init__(self, word):
 		self.word = word
 		self.guess = self.makeGuess('', word, "")
+		self.players = dict()
+		self.blacklist = list()
+		self.guesses = list()
 
 	def addPlayer(self, nick):
 		if (nick in self.players):
@@ -44,18 +48,27 @@ class hman():
 		player = self.players[nick]
 		if (player.guesses > 6):
 			del self.players[nick]
-			if (len(self.players) == 0):
-				return "p:Game over"
+			self.blacklist.append(nick)
+			#if (len(self.players) == 0):
+			#	return "p:Game over"
 			return "p:" + nick + " has been removed."
 		return "n:You have been wrong " + str(player.guesses) + "/7 times."
-
+		  
 	def doGuess(self, nick, guess):
-		if (not(self.play)):
-			return "n:The game has not yet started"
+		#if (not(self.play)):
+		#	return "n:The game has not yet started"
+		if (nick in self.blacklist):
+			return "n:You have already lost."
 		if (not(nick in self.players)):
-			return "n:You are not in this game."
+			self.players[nick] = player(nick)
+			#return "n:You are not in this game."
 		if (guess in self.guesses):
 			return "n:"+ guess + " has already been guessed."
+		if (len(guess) > 1):
+			if (guess != self.word):
+				self.players[nick].guesses += 1
+				return self.checkPlayer(nick)
+			return "p:" + self.word
 		self.guesses.append(guess)
 		newGuess = self.makeGuess(guess, self.word, self.guess)
 		if (newGuess == self.guess):
@@ -67,3 +80,4 @@ class hman():
 	def gameover(self):
 		self.players.clear()
 		del self.guesses[0:len(self.guesses)]
+		del self.blacklist[0:len(self.blacklist)]
