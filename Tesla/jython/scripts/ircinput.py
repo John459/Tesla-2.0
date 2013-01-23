@@ -2,17 +2,6 @@ from irc.adaptors import InputHandlerAdapter
 
 class ircinput(InputHandlerAdapter):
 
-    def handlePrivMsg(self, ircEvent):
-	try:
-		msg = ircEvent.getSource()
-		text = msg.getTrailing()
-		print(text[:3])
-		if (text[:3] == "\\o/"):
-			self.getIrcClient().privMsg(" |", msg.getParams()[0])
-			self.getIrcClient().privMsg("/ \\", msg.getParams()[0])
-	except BaseException, e:
-		print e
-
     def handleUserCommand(self, ircEvent):
 	try:
 		msg = ircEvent.getSource()

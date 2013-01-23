@@ -68,12 +68,21 @@ public class IrcMessage {
 		return noIdent.substring(0, index).toLowerCase().trim();
 	}
 	
+	public String getUserParam()
+	{
+	    String command = getUserCommand();
+        if (command == null || command.length() +2 >= trailing.length())
+            return null;
+        return trailing.substring(command.length()+2).trim();
+	}
+	
 	public String[] getUserParams() {
-		String command = getUserCommand();
-		if (command == null || command.length() +2 >= trailing.length())
-			return null;
-		String param = trailing.substring(command.length()+2).trim();
-		if (param.contains(" "))
+		String param = getUserParam();
+		if (param == null)
+		{
+		    return null;
+		}
+		else if (param.contains(" "))
 		{
 			return param.split(" ");
 		}
