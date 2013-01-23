@@ -31,14 +31,10 @@ class hangman(InputHandlerAdapter):
 			word = self.words[pos]
 			word = word[:len(word)-1]
 			self.games[channel] = hman(word)
-			self.games[channel].addPlayer(nick)
 			self.getIrcClient().privMsg(self.games[channel].guess, channel)
 			return
 		if (not(channel in self.games)):
 			return
-		elif (msg.getUserParams()[0] == "join" and not(self.games[channel].play)):
-		 	if (self.games[channel].addPlayer(nick)):
-				self.getIrcClient().privMsg(nick + " has joined the game.", channel)
 		elif (msg.getUserParams()[0] == "stop"):
 		 	self.getIrcClient().privMsg("The game has been stopped. The word was: " + self.games[channel].word, channel)
 			self.games[channel].gameover()
@@ -46,6 +42,12 @@ class hangman(InputHandlerAdapter):
 		 	return
 		elif (msg.getUserParams()[0] == "word"):
 		  	self.getIrcClient().privMsg(self.games[channel].guess, channel)
+		elif (msg.getUserParams()[0] == "guesses"):
+		 	s = ""
+		 	for guess in self.games[channel].guesses:
+				s = s + str(guess) + ", "
+			s = s[:len(s)-2]
+			self.getIrcClient().notice(s, nick)
 		else:
 		 	guess = msg.getUserParams()[0]
 		 	response = self.games[channel].doGuess(nick, guess)

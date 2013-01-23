@@ -21,12 +21,6 @@ class hman():
 		self.blacklist = list()
 		self.guesses = list()
 
-	def addPlayer(self, nick):
-		if (nick in self.players):
-			return False
-		self.players[nick] = player(nick)
-		return True
-
 	def makeGuess(self, char, word, lastGuess):
 		guess = str()
 		i = 0
@@ -49,19 +43,14 @@ class hman():
 		if (player.guesses > 6):
 			del self.players[nick]
 			self.blacklist.append(nick)
-			#if (len(self.players) == 0):
-			#	return "p:Game over"
 			return "p:" + nick + " has been removed."
 		return "n:You have been wrong " + str(player.guesses) + "/7 times."
 		  
 	def doGuess(self, nick, guess):
-		#if (not(self.play)):
-		#	return "n:The game has not yet started"
 		if (nick in self.blacklist):
 			return "n:You have already lost."
 		if (not(nick in self.players)):
 			self.players[nick] = player(nick)
-			#return "n:You are not in this game."
 		if (guess in self.guesses):
 			return "n:"+ guess + " has already been guessed."
 		if (len(guess) > 1):
